@@ -5,6 +5,7 @@ const path = require('path');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const port = process.env.PORT || 8080;
 
 const authentication = require('./routes/authentication')(router);
 const blogs = require('./routes/blogs.js')(router);
@@ -24,14 +25,14 @@ app.use(cors({
     origin: 'http://localhost:4200'
 }));
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/client/dist'));
+app.use(express.static(__dirname + '/public'));
 app.use('/authentication', authentication);
 app.use('/blogs', blogs);
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/dist/index.html'));
+    res.sendFile(path.join(__dirname + '/pubic/index.html'));
 });
 
-app.listen(8080, () => {
-    console.log('Listening on port 8080');
+app.listen(port, () => {
+    console.log('Listening on port ' + port);
 });
