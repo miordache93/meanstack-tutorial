@@ -1,0 +1,123 @@
+<h1 class="page-header">Blog Feed</h1>
+
+<div class="row show-hide-message" *ngIf="message && newPost">
+    <div [ngClass]="messageClass">
+        {{message}}
+    </div>
+</div>
+
+<button type="button" class="btn btn-warning" *ngIf="!newPost" (click)="newBlogForm()">New Post</button>
+<button [disabled]="loadingBlogs" type="button" class="btn btn-default" *ngIf="!newPost" (click)="reloadBlogs()">
+    <span class="glyphicon glyphicon-repeat">
+    </span>&nbsp;&nbsp;Reload
+</button>
+
+<br>
+<br>
+
+<form *ngIf="newPost" [formGroup]="form" name="blogForm" (submit)="onBlogSubmit()">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <div [ngClass]="{'has-success': form.controls.title.valid, 'has-error': form.controls.title.dirty && form.controls.title.errors}">
+            <input type="text" name="title" formControlName="title" placeholder="Blog Title" autocomplete="off" class="form-control">
+            <ul class="help-block">
+                <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.required">This field is required</li>
+                <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.alphaNumericValidation">Must be a letter or number</li>
+                <li *ngIf="(form.controls.title.dirty && form.controls.title.errors?.maxlength) ||
+                form.controls.title.dirty && form.controls.title.errors?.minlength
+                ">Max length: 50, Min length 5</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="title">Body</label>
+        <div [ngClass]="{'has-success': form.controls.body.valid, 'has-error': form.controls.body.dirty && form.controls.body.errors}">
+            <textarea type="text" name="body" formControlName="body" placeholder="Body" autocomplete="off" class="form-control"></textarea>
+            <ul class="help-block">
+                <li *ngIf="form.controls.body.dirty && form.controls.body.errors?.required">This field is required</li>
+                <li *ngIf="(form.controls.body.dirty && form.controls.body.errors?.maxlength) ||
+                    form.controls.body.dirty && form.controls.body.errors?.minlength">Max length: 500, Min length 5</li>
+            </ul>
+        </div>
+    </div>
+
+    <button [disabled]="processing" type="button" class="btn btn-warning" name="button" (click)="goBack()">Go Back</button>
+    <button [disabled]="processing || !form.valid" type="submit" class="btn btn-success" name="button">Submit</button>
+</form>
+
+<div *ngIf="!newPost">
+    <div class="panel panel-primary" *ngFor="let blog of blogPosts">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{blog.title}}
+            </h3>
+        </div>
+        <div class="panel-body">
+            {{blog.body}}
+        </div>
+
+        <div class="panel-footer">
+            <p>
+                <strong>Posted by:</strong> {{blog.createdBy}}</p>
+            <p>
+                <strong>Date:</strong> {{blog.createdAt | date: 'MMM dd, yyy'}}</p>
+            <div>
+                <div *ngIf="username === blog.createdBy">
+                    <p>
+                        <strong>Likes: </strong>{{blog.likes}}</p>
+                    <p>
+                        <strong>Dislikes: </strong>{{blog.dislikes}}</p>
+                </div>
+                <a *ngIf="username === blog.createdBy" [routerLink]="['/edit-blog/', blog._id]" type="button" class="btn btn-sm btn-info">Edit</a>
+                <a *ngIf="username === blog.createdBy" [routerLink]="['/edit-blog/', blog._id]" type="button" class="btn btn-sm btn-danger">Delete</a>
+                <div class="dropdown">
+                    <button *ngIf="username !== blog.createdBy" type="button" name="button" data-toggle="dropdown" class="btn btn-sm btn-success dropdown-toggle">
+                        <span class="caret">&nbsp;</span>Likes: 21
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="">gugui32z</a>
+                        </li>
+                        <li>
+                            <a href="">ginger</a>
+                        </li>
+                        <li>
+                            <a href="">palet</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button *ngIf="username !== blog.createdBy" type="button" name="button" data-toggle="dropdown" class="btn btn-sm btn-warning dropdown-toggle">
+                        <span class="caret">&nbsp;</span>Dislikes: 21
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="">gugui32z</a>
+                        </li>
+                        <li>
+                            <a href="">ginger</a>
+                        </li>
+                        <li>
+                            <a href="">palet</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <button class="btn btn-sm btn-danger" type="button" name="button" (click)="draftComment()">Post comment</button>
+                        <br />
+                        <!-- <form class="container" [formGroup]="myForm">
+                            <textarea name="comment" class="form-control" cols="30" rows="10"></textarea>
+                            <button class="btn btn-sm btn-info" type="button" name="button" (click)="draftComment()">Submit comment</button>
+                            <button class="btn btn-sm btn-danger" type="button" name="button" (click)="draftComment()">Cancel</button>
+                        </form> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
