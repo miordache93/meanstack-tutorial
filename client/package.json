@@ -23,7 +23,10 @@
     "angular2-flash-messages": "^3.0.1",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "@angular-devkit/build-angular": "~0.803.3",
+    "@angular/cli": "~8.3.3",
+    "@angular/compiler-cli": "~8.2.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.3",
